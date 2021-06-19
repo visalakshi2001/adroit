@@ -1,10 +1,17 @@
 import joblib
 from sklearn.ensemble import RandomForestClassifier
+import os
+import numpy as np
 
 
-rf = joblib.load('/model.joblib')
+curr_path = os.path.dirname(os.path.realpath(__file__))
+rf = joblib.load(curr_path + '/model.joblib')
 
 
+def predict(attributes: np.array):
+    
+    pred = rf.predict(attributes)
 
-def predict(attributes):
-    pass
+    print("Malware Status Predicted")
+
+    return pred[0]
