@@ -21,7 +21,7 @@ with st.form("prediction_form"):
     Price = st.number_input("App Price: ")
     Safe = st.number_input("Number of safe permissions: ", value=0, format="%d")
     Dangerous = st.number_input("Number of Dangerous permissions:", value=0, format="%d")
-    permission = st.selectbox("Permit the app:",
+    permission = st.multiselect("Permit the app:",
                                 feature_cols[5:35]) 
     Category = st.selectbox("Permit the app:",
                                 feature_cols[35:])
@@ -31,7 +31,8 @@ with st.form("prediction_form"):
 
 if submit_val:
     per_d = dict(zip(feature_cols[5:35],np.zeros(30)))
-    per_d[permission] = 1
+    for p in permission:
+        per_d[p] = 1
     permission = np.array(list(per_d.values()))
     cat = dict(zip(feature_cols[35:], np.zeros(15)))
     cat[Category] = 1
@@ -45,6 +46,8 @@ if submit_val:
 
     status = predict(attributes.reshape(1, -1))
 
-    status = "Malware" if status else "Benign"
-
-    st.success(f"The App is {status}")
+    if status:
+        st.error("The App is Malware")
+    else:
+        st.success("The App is Benign")
+        st.balloons()
